@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Slackware build script for kodi 18.8
+# Slackware build script for kodi 18.9
 
 # Copyright 2020-2021 Minime <slackwareinfo[at]slackwarelinux[dot]se>
 # All rights reserved.
@@ -25,8 +25,7 @@
 PRGNAM=kodi
 SRCNAM=xbmc
 CODNAM=Leia
-VERSION=${VERSION:-18.8}
-FFMPEGVER=${FFMPEGVER:-4.0.4}
+VERSION=${VERSION:-18.9}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}
 
@@ -137,10 +136,13 @@ make install DESTDIR=$PKG
 cd ../$SRCNAM-$VERSION-$CODNAM
 
 # Compile only inputstream.adaptive addon
-make -j$(getconf _NPROCESSORS_ONLN) -C tools/depends/target/binary-addons PREFIX=$ADDPKG/usr ADDONS="inputstream.adaptive"
+#make -j$(getconf _NPROCESSORS_ONLN) -C tools/depends/target/binary-addons PREFIX=$ADDPKG/usr ADDONS="inputstream.adaptive"
+
+# Compile inputstream.adaptive and pvr.vuplus addon
+#make -j$(getconf _NPROCESSORS_ONLN) -C tools/depends/target/binary-addons PREFIX=$ADDPKG/usr ADDONS="inputstream.adaptive pvr.vuplus"
 
 # Compile all addons
-#make -j$(getconf _NPROCESSORS_ONLN) -C tools/depends/target/binary-addons PREFIX=$ADDPKG/usr
+make -j$(getconf _NPROCESSORS_ONLN) -C tools/depends/target/binary-addons PREFIX=$ADDPKG/usr
 
 # Fix addons path 64-bit system
 if [ "$LIBDIRSUFFIX" = "64" ]; then
