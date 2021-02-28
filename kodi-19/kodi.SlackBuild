@@ -26,7 +26,6 @@ PRGNAM=kodi
 SRCNAM=xbmc
 CODNAM=Matrix
 VERSION=${VERSION:-19.0}
-FFMPEGVER=${FFMPEGVER:-4.0.4}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}
 
@@ -64,14 +63,15 @@ set -e
 rm -rf $ADDPKG $PKG $KODIBUILD
 mkdir -p $TMP $PKG $ADDPKG $KODIBUILD $OUTPUT
 
-# Fix missing lib folder-path 18.8
+# Fix missing lib folder-path 19.0
 mkdir -p $PKG/usr/lib/$PRGNAM/addons
 
 cd $TMP
 rm -rf $SRCNAM-$VERSION-$CODNAM
 
 # Download source from git directly
-# As there seams to be issues with the tarballs wne trying to compile addons
+# If you prefure to use the tar file you chan change this here.
+# However there was an issue with the tar.gz file in 18.9 when compiling the addons.
 #tar xvf $CWD/$SRCNAM-$VERSION-$CODNAM.tar.gz
 git clone -b $CODNAM https://github.com/xbmc/xbmc $SRCNAM-$VERSION-$CODNAM
 cd $SRCNAM-$VERSION-$CODNAM
@@ -83,11 +83,10 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-# The version of ffmpeg on SBo is too old to compile kodi.
-# Optional ffmpeg is still available but not turned off by default.
-# Note: If compiling without kodis own ffmpeg or using
-# Slackware-Currents own ffmpeg
-# kodi will not build all addons
+# Optional ffmpeg is still available but is turned off by default.
+# This means that the script will use kodis own optimized version of ffmpeg.
+# Note: If compiling ffmpeg with Slackware-Currents own package
+# kodi might not build all the addons.
 if [ "${FFMPEG:-yes}" == "yes" ]; then
   OPT_FFMPEG="ON"
 else
